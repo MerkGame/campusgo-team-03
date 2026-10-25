@@ -1,0 +1,85 @@
+const listDiv = document.getElementById('list-section');
+        listDiv.innerHTML = '';
+        events.forEach(event => {
+            listDiv.innerHTML += `
+                <div class="event-card">
+                    <div class="event-info">
+                        <h3>${event.title}</h3>
+                        <p>${event.date} | ${event.place}</p>
+                    </div>
+                    <button onclick="openDetails(${event.id})">Подробнее</button>
+                </div>
+            `;
+        });
+    }
+
+    // 2. Открытие карточки
+    function openDetails(id) {
+        currentEvent = events.find(e => e.id === id);
+        document.getElementById('detail-title').innerText = currentEvent.title;
+        document.getElementById('detail-date').innerText = currentEvent.date;
+        document.getElementById('detail-place').innerText = currentEvent.place;
+        document.getElementById('detail-desc').innerText = currentEvent.desc;
+        
+        document.getElementById('list-section').classList.add('hidden');
+        document.getElementById('details-section').classList.remove('hidden');
+        document.getElementById('form-section').classList.add('hidden');
+    }
+
+    // 3. Переход к форме
+    function showForm() {
+        document.getElementById('form-event-name').innerText = currentEvent.title;
+        document.getElementById('details-section').classList.add('hidden');
+        document.getElementById('form-section').classList.remove('hidden');
+        // Очистка полей и ошибок
+        document.getElementById('input-name').value = '';
+        document.getElementById('input-contact').value = '';
+        document.getElementById('error-name').style.display = 'none';
+        document.getElementById('error-contact').style.display = 'none';
+        document.getElementById('success-message').style.display = 'none';
+    }
+
+    // 4. Валидация и отправка
+    function submitForm() {
+        const name = document.getElementById('input-name').value.trim();
+        const contact = document.getElementById('input-contact').value.trim();
+        let isValid = true;
+
+        if (name === "") {
+            document.getElementById('error-name').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('error-name').style.display = 'none';
+        }
+
+        if (contact === "") {
+            document.getElementById('error-contact').style.display = 'block';
+            isValid = false;
+        } else {
+            document.getElementById('error-contact').style.display = 'none';
+        }
+
+        if (isValid) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.innerText = `Заявка на мероприятие "${currentEvent.title}" успешно отправлена!`;
+            successDiv.style.display = 'block';
+            // Очищаем форму через 3 секунды и возвращаемся к списку
+            setTimeout(() => {
+                showList();
+            }, 3000);
+        }
+    }
+
+    // 5. Возврат к списку
+    function showList() {
+        document.getElementById('list-section').classList.remove('hidden');
+        document.getElementById('details-section').classList.add('hidden');
+        document.getElementById('form-section').classList.add('hidden');
+    }
+
+    // Запуск при загрузке
+    renderList();
+</script>
+
+</body>
+</html>
